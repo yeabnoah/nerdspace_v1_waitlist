@@ -1,29 +1,19 @@
-// Mongoose schema for your Entity
-// if you wanna create a mongoose Scheme follow the following steps
-// 1. create a new file inside models folder
-// 2. use the bottom boilerplate code as an example
-// 3. export the model and use it in your api
+import mongoose, { Model, Document } from "mongoose";
 
-import mongoose, { Model } from "mongoose";
+interface IUser extends Document {
+    email: string;
+}
 
 const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-
-  password: {
-    type: String,
-    required: true,
-  },
-
-  isProgrammer: {
-    type: Boolean,
-    default: true,
-  },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        lowercase: true,
+    }
 });
 
-const User = mongoose.models.User || mongoose.model("User", userSchema);
+const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
 
 export default User;
