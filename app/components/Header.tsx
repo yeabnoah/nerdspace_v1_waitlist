@@ -1,8 +1,60 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState, useEffect, useRef } from 'react';
+import { FaXTwitter, FaLinkedin, FaTelegram } from 'react-icons/fa6';
 
 export default function Header() {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const toggleDropdown = () => setIsOpen(!isOpen);
+
+  const dropdownVariants = {
+    hidden: { opacity: 0, y: -20, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { duration: 0.3, ease: "easeOut" }
+    },
+    exit: { opacity: 0, y: -20, scale: 0.95, transition: { duration: 0.2 } }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, scale: 0, rotate: -180 },
+    visible: { opacity: 1, scale: 1, rotate: 0 },
+    hover: { scale: 1.2, rotate: 15 }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const socialIcons = {
+    x: {
+      icon: FaXTwitter,
+      link: "https://x.com/Nerd_space1"
+    },
+    linkedin: {
+      icon: FaLinkedin,
+      link: "https://www.linkedin.com/company/nerd-space/"
+    },
+    telegram: {
+      icon: FaTelegram,
+      link: "https://t.me/selfmadecoder/#Nerd_space"
+    }
+  };
+
   return (
     <motion.header
       initial={{ opacity: 0, y: -50 }}
@@ -21,9 +73,45 @@ export default function Header() {
         <span className="text-xl sm:text-2xl font-bold text-white">Nerdspace</span>
       </Link>
 
-      <button className="bg-purple-600 px-4 py-2 rounded-full text-sm font-bold hover:bg-purple-700 transition-colors duration-300">
-        Sign In
-      </button>
+      <div className="relative" ref={dropdownRef}>
+        <button
+          onClick={toggleDropdown}
+          className="bg-purple-600 px-4 py-2 rounded-full text-sm font-bold hover:bg-purple-700 transition-colors duration-300"
+        >
+          Follow our Journey
+        </button>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              variants={dropdownVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="absolute right-0 mt-2 bg-gray-800 rounded-2xl shadow-lg p-2 z-10"
+            >
+              <div className="flex space-x-3">
+                {Object.entries(socialIcons).map(([social, { icon: Icon, link }], index) => (
+                  <motion.a
+                    key={social}
+                    variants={itemVariants}
+                    initial="hidden"
+                    animate="visible"
+                    whileHover="hover"
+                    transition={{ delay: index * 0.1 }}
+                    href={link}
+                    className="text-white text-xl hover:text-purple-400 transition-colors duration-300"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon />
+                  </motion.a>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </motion.header>
   );
 }
