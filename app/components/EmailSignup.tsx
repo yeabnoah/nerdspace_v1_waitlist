@@ -31,7 +31,7 @@ export default function EmailSignup({ onSubmit, isSubmitted }: EmailSignupProps)
 
       if (response.ok) {
         onSubmit(email);
-        setMessage('Thank you for signing up!');
+        setMessage(data.message || 'Thank you for signing up!');
         setMessageType('success');
         setEmail('');
       } else {

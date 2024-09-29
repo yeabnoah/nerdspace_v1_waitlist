@@ -1,28 +1,29 @@
-import { NextResponse } from 'next/server'
-import connectDB from '@/lib/mongodb'
-import { isValidEmail } from '@/lib/utils'
-import Subscriber from '@/model/Subscriber'
+import { NextRequest, NextResponse } from 'next/server';
+import connectDB from '@/lib/mongodb';
+import Subscriber from '@/model/Subscriber';
+import { isValidEmail } from '@/lib/utils';
 
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { email } = await request.json()
+    const { email } = await req.json();
 
     if (!email || !isValidEmail(email)) {
-      return NextResponse.json({ error: 'Invalid email address' }, { status: 400 })
+      return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
     }
 
-    await connectDB()
+    await connectDB();
 
-    const existingUser = await Subscriber.findOne({ email })
-    if (existingUser) {
-      return NextResponse.json({ error: 'Email already subscribed' }, { status: 409 })
+    const existingSubscriber = await Subscriber.findOne({ email });
+    if (existingSubscriber) {
+      return NextResponse.json({ error: 'Email already subscribed' }, { status: 409 });
     }
 
-    const newSubscriber = await Subscriber.create({ email })
+    const newSubscriber = new Subscriber({ email });
+    await newSubscriber.save();
 
-    return NextResponse.json({ message: 'Subscription successful', subscriber: newSubscriber }, { status: 201 })
+    return NextResponse.json({ message: 'Subscription successful' }, { status: 201 });
   } catch (error) {
-    console.error('Error in signup route:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    console.error('Signup error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
