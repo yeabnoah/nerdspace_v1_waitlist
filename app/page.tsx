@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import EmailSignup from './components/EmailSignup';
 import CategoryCarousel from './components/CategoryCarousel';
 import Footer from './components/Footer';
 import { categories, Category } from './data/categories';
-import { FaStar, FaHeart, FaMusic, FaCamera } from 'react-icons/fa';
+import { FaStar, FaHeart, FaMusic, FaCamera, FaSun, FaMoon } from 'react-icons/fa';
 import { IconType } from 'react-icons';
 
 interface FloatingIconProps {
@@ -42,13 +42,13 @@ const FloatingIcon: React.FC<FloatingIconProps> = ({ Icon, initialPosition }) =>
 
 export default function Home() {
   const [isEmailSubmitted, setIsEmailSubmitted] = useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [icons, setIcons] = useState<FloatingIconProps[]>([]);
 
   const handleEmailSubmit = (email: string): void => {
     console.log('Email submitted:', email);
     setIsEmailSubmitted(true);
   };
-
-  const [icons, setIcons] = useState<FloatingIconProps[]>([]);
 
   useEffect(() => {
     const newIcons: FloatingIconProps[] = categories.map((category: Category) => ({
@@ -61,13 +61,36 @@ export default function Home() {
     setIcons(newIcons);
   }, []);
 
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   return (
-    <div className="min-h-screen bg_image text-white flex flex-col items-center justify-between p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+    <div className={`min-h-screen ${isDarkMode ? 'dark-gradient-bg' : 'bg_image'} text-white flex flex-col items-center justify-between p-4 sm:p-6 lg:p-8 relative overflow-hidden`}>
       {icons.map((icon, index) => (
         <FloatingIcon key={index} {...icon} />
       ))}
 
       <Header />
+
+      <AnimatePresence>
+        <motion.div
+          initial={{ x: '100%' }}
+          animate={{ x: 0 }}
+          exit={{ x: '100%' }}
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          className="fixed top-20 right-0 z-50"
+        >
+          <motion.button
+            onClick={toggleDarkMode}
+            className="p-2 rounded-l-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors"
+            whileHover={{ x: -5 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            {isDarkMode ? <FaSun size={16} /> : <FaMoon size={16} />}
+          </motion.button>
+        </motion.div>
+      </AnimatePresence>
 
       <motion.main
         initial={{ opacity: 0 }}

@@ -62,7 +62,7 @@ export default function Header() {
       transition={{ duration: 0.5 }}
       className="w-full flex justify-between items-center mb-8 sm:mb-12 px-4 sm:px-6 py-4"
     >
-      <Link href="/" className="flex items-center space-x-2 px-3 rounded">
+      <Link href="/" className="flex items-center space-x-2 md:px-3 sm:px-0 rounded">
         <Image
           className="rounded"
           src="/nerdspace.png"
@@ -76,9 +76,10 @@ export default function Header() {
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={toggleDropdown}
-          className="bg-purple-600 px-4 py-2 rounded-full text-sm font-bold hover:bg-purple-700 transition-colors duration-300"
+          className="relative px-4 py-2 rounded-full text-sm font-bold text-white bg-purple-600 transition-colors duration-300 overflow-hidden"
         >
-          Follow our Journey
+          <span className="relative z-10">Follow our Journey</span>
+          <span className="absolute inset-0 rounded-full border-2 border-transparent animate-gradient-border"></span>
         </button>
 
         <AnimatePresence>
