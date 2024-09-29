@@ -5,7 +5,7 @@ export default function Hero() {
         a place where your passion <span className="text-purple-400">finds home</span>
       </h1>
       <p className="text-base sm:text-lg mb-6 sm:mb-8 text-gray-300 max-w-2xl mx-auto">
-        Whether you are into art, tech, music, or just vibing with cool projects, this is the place to connect, create, and share what you love. Join a community that is all about turning ideas into something amazing!
+      Whether you are passionate about tech, art, gaming, building cool projects, or simply meeting like-minded people, this is your space to connect, collaborate, and bring ideas to life.
       </p>
     </>
   );
