@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import toast, { Toaster } from 'react-hot-toast';
+import Image from 'next/image';
 
 interface EmailSignupProps {
   onSubmit: (email: string) => void;
@@ -9,14 +11,10 @@ interface EmailSignupProps {
 export default function EmailSignup({ onSubmit, isSubmitted }: EmailSignupProps) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    setMessage('');
-    setMessageType('');
 
     try {
       const response = await fetch('/api/signup', {
@@ -31,69 +29,73 @@ export default function EmailSignup({ onSubmit, isSubmitted }: EmailSignupProps)
 
       if (response.ok) {
         onSubmit(email);
-        setMessage(data.message || 'Thank you for signing up!');
-        setMessageType('success');
+        toast.success('Thank you for signing up! We are excited to have you on board!', {
+          icon: '🎉',
+          duration: 5000,
+          style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+          },
+        });
         setEmail('');
       } else {
-        setMessage(data.error || 'An error occurred. Please try again.');
-        setMessageType('error');
+        toast.error(data.error || 'An error occurred. Please try again.', {
+          icon: '❌',
+          duration: 4000,
+          style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+          },
+        });
       }
     } catch (error) {
       console.error('Error:', error);
-      setMessage('An error occurred. Please try again.');
-      setMessageType('error');
+      toast.error('An error occurred. Please try again.', {
+        icon: '❌',
+        duration: 4000,
+        style: {
+          borderRadius: '10px',
+          background: '#333',
+          color: '#fff',
+        },
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <motion.form
-      onSubmit={handleSubmit}
-      className="w-full max-w-md mx-auto mb-8 sm:mb-12"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.4 }}
-    >
-      <div className="relative">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          className="w-full px-4 py-3.5 rounded-2xl bg-[#2A2A3A] text-white placeholder-gray-400 mb-4 pr-32 text-lg"
-          required
-        />
-        <motion.button
-          type="submit"
-          className="absolute right-1 top-1.5 bg-purple-600 px-6 py-3 rounded-xl font-bold text-sm hover:bg-purple-700 transition-colors duration-300"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          disabled={isLoading}
-        >
-          {isLoading ? 'Joining...' : 'Join Now'}
-        </motion.button>
-      </div>
-      {message && (
-        <motion.p
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`mt-2 font-semibold ${
-            messageType === 'success' ? 'text-green-400' : 'text-red-400'
-          }`}
-        >
-          {message}
-        </motion.p>
-      )}
-      {isSubmitted && !message && (
-        <motion.p
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-green-400 mt-2 font-semibold"
-        >
-          Thanks for joining! Check your email for next steps.
-        </motion.p>
-      )}
-    </motion.form>
+    <>
+      <Toaster position="top-center" reverseOrder={false} />
+      <motion.form
+        onSubmit={handleSubmit}
+        className="w-full max-w-md mx-auto mb-8 sm:mb-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+      >
+        <div className="relative">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+            className="w-full px-4 py-3.5 rounded-2xl bg-[#2A2A3A] text-white placeholder-gray-400 mb-4 pr-32 text-lg"
+            required
+          />
+          <motion.button
+            type="submit"
+            className="absolute right-1 top-1.5 bg-purple-600 px-6 py-3 rounded-xl font-bold text-sm hover:bg-purple-700 transition-colors duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Joining...' : 'Join Now'}
+          </motion.button>
+        </div>
+      </motion.form>
+    </>
   );
 }
