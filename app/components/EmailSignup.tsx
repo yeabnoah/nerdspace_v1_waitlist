@@ -1,7 +1,5 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import toast, { Toaster } from 'react-hot-toast';
-import Image from 'next/image';
+import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 interface EmailSignupProps {
   onSubmit: (email: string) => void;
@@ -9,18 +7,31 @@ interface EmailSignupProps {
 }
 
 export default function EmailSignup({ onSubmit, isSubmitted }: EmailSignupProps) {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address.", {
+        icon: "❌",
+        duration: 4000,
+        style: {
+          borderRadius: "0px",
+          background: "#111",
+          color: "#fff",
+        },
+      });
+      return;
+    }
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/signup', {
-        method: 'POST',
+      const response = await fetch("/api/signup", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email }),
       });
@@ -29,36 +40,51 @@ export default function EmailSignup({ onSubmit, isSubmitted }: EmailSignupProps)
 
       if (response.ok) {
         onSubmit(email);
-        toast.success('Thank you for signing up! We are excited to have you on board!', {
-          icon: '🎉',
-          duration: 5000,
-          style: {
-            borderRadius: '10px',
-            background: '#333',
-            color: '#fff',
-          },
-        });
-        setEmail('');
+        toast.success(
+          "Thank you for signing up! We are excited to have you on board!",
+          {
+            icon: "🎉",
+            duration: 5000,
+            style: {
+              borderRadius: "0px",
+              background: "#111",
+              color: "#fff",
+            },
+          }
+        );
+        setEmail("");
       } else {
-        toast.error(data.error || 'An error occurred. Please try again.', {
-          icon: '❌',
-          duration: 4000,
-          style: {
-            borderRadius: '10px',
-            background: '#333',
-            color: '#fff',
-          },
-        });
+        if (data.error === "Email already subscribed") {
+          toast.error("This email is already registered.", {
+            icon: "⚠️",
+            duration: 4000,
+            style: {
+              borderRadius: "0px",
+              background: "#111",
+              color: "#fff",
+            },
+          });
+        } else {
+          toast.error(data.error || "An error occurred. Please try again.", {
+            icon: "❌",
+            duration: 4000,
+            style: {
+              borderRadius: "0px",
+              background: "#111",
+              color: "#fff",
+            },
+          });
+        }
       }
     } catch (error) {
-      console.error('Error:', error);
-      toast.error('An error occurred. Please try again.', {
-        icon: '❌',
+      console.error("Error:", error);
+      toast.error("An error occurred. Please try again.", {
+        icon: "❌",
         duration: 4000,
         style: {
-          borderRadius: '10px',
-          background: '#333',
-          color: '#fff',
+          borderRadius: "0px",
+          background: "#111",
+          color: "#fff",
         },
       });
     } finally {
@@ -67,35 +93,29 @@ export default function EmailSignup({ onSubmit, isSubmitted }: EmailSignupProps)
   };
 
   return (
-    <>
-      <Toaster position="top-center" reverseOrder={false} />
-      <motion.form
-        onSubmit={handleSubmit}
-        className="w-full max-w-md mx-auto mb-8 sm:mb-12"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-      >
-        <div className="relative">
+    <div className="relative max-w-xl  overflow-hidden overflow-x-hidden   bg-[#0A0A0A] mx-auto flex flex-col justify-center items-start shadow-lg">
+      {/* Grain overlay */}
+      <div className="pointer-events-none absolute inset-0 z-10 grain-overlay" aria-hidden="true" />
+      <Toaster position="bottom-right" reverseOrder={false} />
+      <div className="relative z-20 w-full">
+        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
-            className="w-full px-4 py-3.5 rounded-2xl bg-[#2A2A3A] text-white placeholder-gray-400 mb-4 pr-32 text-lg"
+            className="w-full px-5 py-3 rounded-none bg-black text-white placeholder-gray-400 text-base border border-neutral-800 focus:border-white focus:ring-2 focus:ring-white/20 transition outline-none"
             required
           />
-          <motion.button
+          <button
             type="submit"
-            className="absolute right-1 top-1.5 bg-purple-600 px-6 py-3 rounded-xl font-bold text-sm hover:bg-purple-700 transition-colors duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className="w-full px-5 py-3 rounded-none bg-white text-black font-bold text-base transition hover:bg-gray-200 disabled:opacity-60 border border-white focus:outline-none"
             disabled={isLoading}
           >
-            {isLoading ? 'Joining...' : 'Join Now'}
-          </motion.button>
-        </div>
-      </motion.form>
-    </>
+            {isLoading ? "Joining..." : "Join Waitlist"}
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }

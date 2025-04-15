@@ -90,6 +90,25 @@ input:focus {
   z-index: -1;
 }
 
+.noise-background {
+  background-image: url('./../public/grain.avif'); /* Path to your noise texture */
+  background-size: cover; /* Ensure it covers the entire area */
+  background-repeat: repeat; /* Repeat the texture */
+  position: fixed; /* Fix it to the viewport */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1; /* Send it behind other content */
+}
+
+.grain-overlay {
+  background: url('./../public/grain.avif'); /* Add path to your grain texture image */
+  background-size: cover;
+  opacity: 0.6; /* Adjust opacity for desired effect */
+  pointer-events: none; /* Prevent interaction with the overlay */
+}
+
 .grid-background::before {
   content: "";
   position: absolute;
@@ -183,4 +202,30 @@ input:focus {
     hsl(240, 10%, 10%) 0%,
     hsl(240, 10%, 20%) 100%
   );
+}
+
+/* Grain overlay for subtle texture */
+.grain-overlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  opacity: 0.18;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAABF0lEQVRoQ+3XwQnAIBAEwZz/6y+ZQhQpimeISFRCGDpa2BkLomAAAAAAAAAAB+vvVuv5vW7/dwZ0ZmQfM9vDOMkMt2rt7NmBGG99nmCaTKty+O+kO5OVwOB1p5MNDoAuCEi0aKBsl0x2drXr/7Lr1leonX2NDSSSXTHQZnIcDplLWYwAAAAAElFTkSuQmCC');
+  background-size: 200px 200px;
+  animation: grain-move 1.2s steps(2) infinite;
+}
+
+@keyframes grain-move {
+  0% { background-position: 0 0; }
+  10% { background-position: -5px -10px; }
+  20% { background-position: -15px 5px; }
+  30% { background-position: 7px -25px; }
+  40% { background-position: 20px 15px; }
+  50% { background-position: -25px 10px; }
+  60% { background-position: 15px 25px; }
+  70% { background-position: 0px 15px; }
+  80% { background-position: -15px 0px; }
+  90% { background-position: 10px 5px; }
+  100% { background-position: 0 0; }
 }
