@@ -97,7 +97,7 @@ export default function EmailSignup({ onSubmit, isSubmitted }: EmailSignupProps)
       {/* Grain overlay */}
       <div className="pointer-events-none absolute inset-0 z-10 grain-overlay" aria-hidden="true" />
       <Toaster position="bottom-right" reverseOrder={false} />
-      <div className="relative z-20 w-full">
+      <div className="relative z-20 w-full py-3">
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
           <input
             type="email"
