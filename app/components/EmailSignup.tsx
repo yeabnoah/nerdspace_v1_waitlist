@@ -1,5 +1,6 @@
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import EmailConfirmationModal from "./EmailConfirmationModal";
 
 interface EmailSignupProps {
   onSubmit: (email: string) => void;
@@ -9,6 +10,7 @@ interface EmailSignupProps {
 export default function EmailSignup({ onSubmit, isSubmitted }: EmailSignupProps) {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -25,7 +27,12 @@ export default function EmailSignup({ onSubmit, isSubmitted }: EmailSignupProps)
       });
       return;
     }
+    setShowConfirmation(true);
+  };
+
+  const handleConfirm = async () => {
     setIsLoading(true);
+    setShowConfirmation(false);
 
     try {
       const response = await fetch("/api/signup", {
@@ -92,11 +99,14 @@ export default function EmailSignup({ onSubmit, isSubmitted }: EmailSignupProps)
     }
   };
 
+  const handleCancel = () => {
+    setShowConfirmation(false);
+  };
+
   return (
-    <div className="relative max-w-xl  overflow-hidden overflow-x-hidden   bg-[#0A0A0A] mx-auto flex flex-col justify-center items-start shadow-lg">
+    <div className="relative max-w-xl overflow-hidden overflow-x-hidden bg-[#0A0A0A] mx-auto flex flex-col justify-center items-start shadow-lg">
       {/* Grain overlay */}
       <div className="pointer-events-none absolute inset-0 z-10 grain-overlay" aria-hidden="true" />
-      <Toaster position="bottom-right" reverseOrder={false} />
       <div className="relative z-20 w-full py-3">
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
           <input
@@ -116,6 +126,12 @@ export default function EmailSignup({ onSubmit, isSubmitted }: EmailSignupProps)
           </button>
         </form>
       </div>
+      <EmailConfirmationModal
+        isOpen={showConfirmation}
+        email={email}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { Manrope as FontSans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Provider from "@/provider/sessionProvider";
+import { Toaster } from "react-hot-toast";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -12,7 +13,7 @@ const fontSans = FontSans({
 // ******** you can change this metadata information with yours
 export const metadata: Metadata = {
   title: "Nerdspace",
-  description: "Nerd Space is a community app where curious minds come together to connect, learn, and create. Whether you're into coding, design, science, or just passionate about learning new things, it’s the perfect space to collaborate with like-minded people.",
+  description: "Nerd Space is a community app where curious minds come together to connect, learn, and create. Whether you're into coding, design, science, or just passionate about learning new things, it's the perfect space to collaborate with like-minded people.",
 
   // ********** you can find the favicons in /public folder
   icons: {
@@ -38,7 +39,10 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <Provider> {children}</Provider>
+        <Provider>
+          {children}
+          <Toaster position="top-right" />
+        </Provider>
       </body>
     </html>
   );

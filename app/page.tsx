@@ -93,9 +93,7 @@ export default function Home() {
 
       <div className="flex flex-1 h-full w-full min-h-0 bg-[#0A0A0A] flex-col md:flex-row">
         {/* Left: Text and buttons */}
-        <div
-          className="w-fit flex-1 md:flex-[0_0_35%] md:max-w-[35%] flex flex-col justify-center px-4 md:py-0 z-10 order-2 md:order-1 min-h-0"
-        >
+        <div className="w-fit flex-1 md:flex-[0_0_35%] md:max-w-[35%] flex flex-col justify-center px-4 md:py-0 z-10 order-2 md:order-1 min-h-0">
           {/* On mobile, only show the heading and description, hide the form here */}
           <div className="relative max-w-full md:bottom-0 md:fixed md:left-5 md:max-w-[30%] mx-auto  md:block mt-8 flex flex-col flex-1 min-h-0">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2 sm:mb-6 leading-tight">
@@ -131,7 +129,7 @@ export default function Home() {
             <div className="absolute inset-0 bg-black/40" />
             {/* Built by text at bottom right of image side */}
             <div className="absolute font-bold bottom-2 right-2 sm:bottom-4 sm:right-4 z-30 text-gray-400 text-xs sm:text-sm">
-              Built by{' '}
+              Built by{" "}
               <a
                 href="https://x.com/technerd556"
                 target="_blank"
