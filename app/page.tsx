@@ -65,7 +65,7 @@ export default function Home() {
       />
 
       {/* Top left logo */}
-      <div className="absolute z-20 bg-[#0A0A0A] sm:top-4 sm:left-4 top-2 left-2">
+      {/* <div className="absolute z-20 bg-[#0A0A0A] sm:top-4 sm:left-4 top-2 left-2">
         <div className="rounded-full p-2 flex items-center justify-center">
           <svg
             width="28"
@@ -84,6 +84,11 @@ export default function Home() {
             />
           </svg>
         </div>
+      </div> */}
+      <div className="absolute z-20 sm:top-4 sm:left-4 top-2 left-2">
+        <div className="rounded-full p-2 flex items-center justify-center">
+          <span className="text-white text-lg font-bold">NerdSpace.</span>
+        </div>
       </div>
 
       <div className="flex flex-1 h-full w-full min-h-0 bg-[#0A0A0A] flex-col md:flex-row">
@@ -101,7 +106,7 @@ export default function Home() {
             {/* On mobile, only show the heading and description, hide the form here */}
             <p className="text-gray-300 text-base sm:text-lg mb-2 sm:mb-6 flex-shrink-0">
               we built a space on the internet for people who love creating and
-              building — to create, build and share it with others
+              building — to create, build and share their crafts with others
             </p>
             {/* Hide form on mobile here, show only on md+ */}
             <div className="mb-8 hidden md:block">
@@ -128,7 +133,7 @@ export default function Home() {
             <div className="absolute font-bold bottom-2 right-2 sm:bottom-4 sm:right-4 z-30 text-gray-400 text-xs sm:text-sm">
               Built by{' '}
               <a
-                href="https://x.com/technerd355"
+                href="https://x.com/technerd556"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline hover:text-white transition-colors"
